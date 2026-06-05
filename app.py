@@ -8,7 +8,7 @@ from langchain_core.output_parsers import StrOutputParser
 from prompt import prompt
 
 st.title("📄 AI Document Chatbot")
-
+st.subheader("Já temos alguns arquivo pergunte sobre eles\n-manual_produtos\n-relatorio_mensal\n-vendas_maio2026")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
 @st.cache_resource
