@@ -9,5 +9,5 @@ python_version: '3.11'
 app_file: app.py
 pinned: false
 license: mit
-short_description: AI Agent with RAG and local LLMs built from scratch
+short_description: AI Agent with RAG and LLMs built from scratch
 ---
