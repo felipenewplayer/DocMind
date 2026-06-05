@@ -21,7 +21,7 @@ def load_chain():
         embedding_function=embeddings
     )
     llm_groq = ChatGroq(
-        model="llama3-8b-8192",
+        model="openai/gpt-oss-120b",
         temperature=0.5,
         api_key=GROQ_API_KEY
     )
