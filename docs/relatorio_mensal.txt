@@ -1,0 +1,39 @@
+RELATÓRIO MENSAL - TECHSOLUTIONS LTDA
+Mês: Maio de 2026
+
+RESUMO EXECUTIVO
+A TechSolutions registrou crescimento de 18% no faturamento em relação ao mês anterior,
+impulsionado principalmente pelos contratos de consultoria em Inteligência Artificial.
+
+PROJETOS EM ANDAMENTO
+1. Projeto Alpha - Cliente: Banco Nacional
+   - Implementação de chatbot com RAG para atendimento ao cliente
+   - Status: 70% concluído
+   - Previsão de entrega: 15/06/2026
+
+2. Projeto Beta - Cliente: Varejo Express
+   - Automação de processos com agentes de IA e N8N
+   - Status: 40% concluído
+   - Previsão de entrega: 30/07/2026
+
+3. Projeto Gamma - Cliente: LogTech
+   - Pipeline de dados com análise preditiva
+   - Status: 90% concluído
+   - Previsão de entrega: 05/06/2026
+
+EQUIPE
+- Total de colaboradores: 24
+- Novos contratados no mês: 3 (2 desenvolvedores Python, 1 especialista em IA)
+- Desligamentos: 1
+
+DESAFIOS DO MÊS
+- Atraso na entrega de infraestrutura cloud pelo fornecedor AWS
+- Necessidade de treinamento adicional em LangChain para 4 desenvolvedores
+
+PRÓXIMOS PASSOS
+- Iniciar negociação com 3 novos prospects na área de saúde
+- Implementar pipeline de CI/CD para todos os projetos ativos
+- Realizar workshop interno sobre MCP e agentes autônomos
+
+Elaborado por: Diretoria de Operações
+Data: 31/05/2026
