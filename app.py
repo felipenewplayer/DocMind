@@ -16,23 +16,19 @@ st.set_page_config(
 # ─── CSS estilo ChatGPT ───────────────────────────────────
 st.markdown("""
 <style>
-    /* Fundo escuro geral */
     .stApp {
         background-color: #212121;
         color: #ececec;
     }
 
-    /* Esconde header e footer do Streamlit */
     header, footer { visibility: hidden; }
 
-    /* Área de mensagens com scroll */
     .chat-container {
         max-width: 750px;
         margin: 0 auto;
         padding-bottom: 120px;
     }
 
-    /* Balão do usuário */
     .msg-user {
         background-color: #2f2f2f;
         border-radius: 16px;
@@ -43,7 +39,6 @@ st.markdown("""
         line-height: 1.6;
     }
 
-    /* Balão do assistente */
     .msg-bot {
         background-color: #212121;
         border-radius: 16px;
@@ -54,7 +49,6 @@ st.markdown("""
         line-height: 1.6;
     }
 
-    /* Label do remetente */
     .msg-label {
         font-size: 11px;
         color: #8e8ea0;
@@ -62,19 +56,6 @@ st.markdown("""
         margin-left: 4px;
     }
 
-    /* Input fixo no fundo */
-    .input-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: #212121;
-        padding: 16px 24px 24px;
-        z-index: 999;
-        border-top: 1px solid #2f2f2f;
-    }
-
-    /* Estiliza o input do Streamlit */
     .stChatInput textarea {
         background-color: #2f2f2f !important;
         color: #ececec !important;
@@ -83,7 +64,6 @@ st.markdown("""
         font-size: 15px !important;
     }
 
-    /* Título centralizado */
     .chat-title {
         text-align: center;
         color: #ececec;
@@ -146,18 +126,36 @@ st.markdown('''<div class="chat-subtitle">
 # ─── Exibe histórico ──────────────────────────────────────
 for msg in st.session_state.messages:
     if msg["role"] == "user":
-        st.markdown(f'<div class="msg-label">Você</div><div class="msg-user">{msg["content"]}</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="msg-label">Você</div>'
+            f'<div class="msg-user">{msg["content"]}</div>',
+            unsafe_allow_html=True
+        )
     else:
-        st.markdown(f'<div class="msg-label">🤖 Assistente</div><div class="msg-bot">{msg["content"]}</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="msg-label">🤖 Assistente</div>'
+            f'<div class="msg-bot">{msg["content"]}</div>',
+            unsafe_allow_html=True
+        )
+
+# ─── Streaming para última mensagem ──────────────────────
+if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
+    last_query = st.session_state.messages[-1]["content"]
+
+    st.markdown('<div class="msg-label">🤖 Assistente</div>', unsafe_allow_html=True)
+
+    def stream_response():
+        for chunk in rag_chain.stream(last_query):
+            yield chunk
+
+    response = st.write_stream(stream_response())
+
+    st.session_state.messages.append({"role": "assistant", "content": response})
+    st.rerun()
 
 # ─── Input fixo no fundo ──────────────────────────────────
 query = st.chat_input("Pergunte algo sobre os documentos...")
 
 if query:
     st.session_state.messages.append({"role": "user", "content": query})
-
-    with st.spinner(""):
-        response = rag_chain.invoke(query)
-
-    st.session_state.messages.append({"role": "assistant", "content": response})
     st.rerun()
