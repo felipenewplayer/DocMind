@@ -8,7 +8,6 @@ from langchain_community.document_loaders import (
     TextLoader,
 )
 
-
 def safe_load(loader):
     docs = []
     try:

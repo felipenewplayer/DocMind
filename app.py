@@ -1,99 +1,44 @@
 import streamlit as st
-import os
+import os, time
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from prompt import prompt
+from dotenv import load_dotenv
+from styles import get_css, render_user_message, render_bot_message, render_header
+
+load_dotenv()
+
+
+# ─── Typewriter ───────────────────────────────────────────
+def typewriter_stream(chain, query,delay=0.02):
+    for token in chain.stream(query):
+        for char in token:
+            yield char
+            time.sleep(delay)
+
+# ─── Config ──────────────────────────────────────────────
+DOCUMENTS = ["manual_produtos", "relatorio_mensal", "vendas_maio2026"]
 
 st.set_page_config(
     page_title="AI Document Chatbot",
     page_icon="🤖",
     layout="centered"
 )
+st.markdown(get_css(), unsafe_allow_html=True)
 
-# ─── CSS estilo ChatGPT ───────────────────────────────────
-st.markdown("""
-<style>
-    .stApp {
-        background-color: #212121;
-        color: #ececec;
-    }
-
-    header, footer { visibility: hidden; }
-
-    .chat-container {
-        max-width: 750px;
-        margin: 0 auto;
-        padding-bottom: 120px;
-    }
-
-    .msg-user {
-        background-color: #2f2f2f;
-        border-radius: 16px;
-        padding: 12px 18px;
-        margin: 8px 0 8px 80px;
-        color: #ececec;
-        font-size: 15px;
-        line-height: 1.6;
-    }
-
-    .msg-bot {
-        background-color: #212121;
-        border-radius: 16px;
-        padding: 12px 18px;
-        margin: 8px 80px 8px 0;
-        color: #ececec;
-        font-size: 15px;
-        line-height: 1.6;
-    }
-
-    .msg-label {
-        font-size: 11px;
-        color: #8e8ea0;
-        margin-bottom: 4px;
-        margin-left: 4px;
-    }
-
-    .stChatInput textarea {
-        background-color: #2f2f2f !important;
-        color: #ececec !important;
-        border: 1px solid #3f3f3f !important;
-        border-radius: 12px !important;
-        font-size: 15px !important;
-    }
-
-    .chat-title {
-        text-align: center;
-        color: #ececec;
-        font-size: 22px;
-        font-weight: 600;
-        padding: 32px 0 8px;
-    }
-
-    .chat-subtitle {
-        text-align: center;
-        color: #8e8ea0;
-        font-size: 13px;
-        margin-bottom: 32px;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# ─── Carrega o pipeline RAG ───────────────────────────────
+# ─── Pipeline RAG ────────────────────────────────────────
 @st.cache_resource
 def load_chain():
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
-    db = Chroma(
-        persist_directory="db",
-        embedding_function=embeddings
-    )
+    db = Chroma(persist_directory="db", embedding_function=embeddings)
     llm = ChatGroq(
         model="openai/gpt-oss-120b",
-        temperature=0.5,
+        temperature=0.3,
         api_key=os.environ.get("GROQ_API_KEY")
     )
     retriever = db.as_retriever(search_kwargs={"k": 10})
@@ -110,52 +55,32 @@ def load_chain():
 
 rag_chain = load_chain()
 
-# ─── Histórico de mensagens ───────────────────────────────
+# ─── Estado ───────────────────────────────────────────────
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# ─── Título ───────────────────────────────────────────────
-st.markdown('<div class="chat-title">🤖 AI Document Chatbot</div>', unsafe_allow_html=True)
-st.markdown('''<div class="chat-subtitle">
-    Documentos disponíveis: 
-    <b style="color:#ececec">manual_produtos</b> · 
-    <b style="color:#ececec">relatorio_mensal</b> · 
-    <b style="color:#ececec">vendas_maio2026</b>
-</div>''', unsafe_allow_html=True)
+# ─── Header ───────────────────────────────────────────────
+title, subtitle = render_header(DOCUMENTS)
+st.markdown(title, unsafe_allow_html=True)
+st.markdown(subtitle, unsafe_allow_html=True)
 
-# ─── Exibe histórico ──────────────────────────────────────
+# ─── Histórico ────────────────────────────────────────────
 for msg in st.session_state.messages:
     if msg["role"] == "user":
-        st.markdown(
-            f'<div class="msg-label">Você</div>'
-            f'<div class="msg-user">{msg["content"]}</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown(render_user_message(msg["content"]), unsafe_allow_html=True)
     else:
-        st.markdown(
-            f'<div class="msg-label">🤖 Assistente</div>'
-            f'<div class="msg-bot">{msg["content"]}</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown(render_bot_message(msg["content"]), unsafe_allow_html=True)
 
-# ─── Streaming para última mensagem ──────────────────────
+# ─── Streaming ────────────────────────────────────────────
 if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
     last_query = st.session_state.messages[-1]["content"]
-
-    st.markdown('<div class="msg-label">🤖 Assistente</div>', unsafe_allow_html=True)
-
-    def stream_response():
-        for chunk in rag_chain.stream(last_query):
-            yield chunk
-
-    response = st.write_stream(stream_response())
+    
+    response = st.write_stream(typewriter_stream(rag_chain,last_query))
 
     st.session_state.messages.append({"role": "assistant", "content": response})
     st.rerun()
 
-# ─── Input fixo no fundo ──────────────────────────────────
-query = st.chat_input("Pergunte algo sobre os documentos...")
-
-if query:
+# ─── Input ────────────────────────────────────────────────
+if query := st.chat_input("Pergunte algo sobre os documentos..."):
     st.session_state.messages.append({"role": "user", "content": query})
     st.rerun()
