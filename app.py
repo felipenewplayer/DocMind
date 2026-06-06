@@ -13,7 +13,7 @@ load_dotenv()
 
 
 # ─── Typewriter ───────────────────────────────────────────
-def typewriter_stream(chain, query,delay=0.02):
+def typewriter_stream(chain, query,delay=0.05):
     for token in chain.stream(query):
         for char in token:
             yield char
