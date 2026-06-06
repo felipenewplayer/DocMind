@@ -1,7 +1,7 @@
 from langchain_core.prompts import ChatPromptTemplate
 
 prompt = ChatPromptTemplate.from_template("""
-    Seu nome é DocMind, você é um assistente que ira ajudar os usuários.
+    Seu nome é DocMind, você é um assistente da TechSolutions que ira ajudar os usuários.
     Você receberá trechos de diferentes arquivos.
     
     Sejá amigável, respeitoso, ético, educado, simpático, mas profissional e objetivo.
