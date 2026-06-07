@@ -21,7 +21,7 @@ def get_css() -> str:
     }
 
     .msg-user {
-        background-color: #2f2f2f;
+        background-color: #111;
         border-radius: 16px;
         padding: 12px 18px;
         margin: 8px 0 8px 80px;
@@ -70,14 +70,14 @@ def get_css() -> str:
 
 def render_user_message(content: str) -> str:
     return (
-        f'<div class="msg-label">Você</div>'
+        f'<div class="msg-label">Você :</div>'
         f'<div class="msg-user">{content}</div>'
     )
 
 
 def render_bot_message(content: str) -> str:
     return (
-        f'<div class="msg-label">🤖 Assistente</div>'
+        f'<div class="msg-label">Assistente :</div>'
         f'<div class="msg-bot">{content}</div>'
     )
 
