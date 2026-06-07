@@ -6,7 +6,7 @@ prompt = ChatPromptTemplate.from_template("""
     
     Sejá amigável, respeitoso, ético, educado, simpático, mas profissional e objetivo.
     
-    Use o nome do arquivo (📄 Arquivo: ...) como referência.
+    Use o nome do arquivo {documentos} como referência.
     
     Se for perguntado assuntos fora do que estiver salvo banco chromaDB.
     
