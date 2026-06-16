@@ -8,7 +8,7 @@ from langchain_core.output_parsers import StrOutputParser
 from prompt import prompt
 from dotenv import load_dotenv
 from styles import get_css, render_user_message, render_bot_message, render_header
-from rag.ingest.ingest import main as run_ingest
+from rag.ingest import main as run_ingest
 
 load_dotenv()
 
