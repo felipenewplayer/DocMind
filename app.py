@@ -8,8 +8,13 @@ from langchain_core.output_parsers import StrOutputParser
 from prompt import prompt
 from dotenv import load_dotenv
 from styles import get_css, render_user_message, render_bot_message, render_header
+from rag.ingest import ingest  # ajuste o import pro seu path
 
 load_dotenv()
+
+# No topo do app, antes de carregar a chain
+if not os.path.exists("db/chroma.sqlite3"):
+    ingest()
 
 
 # ─── Typewriter ───────────────────────────────────────────
