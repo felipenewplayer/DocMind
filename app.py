@@ -8,7 +8,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
-from rag.ingest.ingest import main as run_ingest
+from rag.ingest import main as run_ingest
 
 from prompt import prompt
 from styles import get_css, render_bot_message, render_header, render_user_message
