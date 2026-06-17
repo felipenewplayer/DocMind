@@ -1,39 +1,40 @@
+import os
+import time
+
 import streamlit as st
-import os, time
-from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_groq import ChatGroq
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.output_parsers import StrOutputParser
-from prompt import prompt
 from dotenv import load_dotenv
-from styles import get_css, render_user_message, render_bot_message, render_header
-from rag.ingest import main as run_ingest
+from langchain_chroma import Chroma
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
+from langchain_groq import ChatGroq
+from langchain_huggingface import HuggingFaceEmbeddings
+from rag.ingest.ingest import main as run_ingest
+
+from prompt import prompt
+from styles import get_css, render_bot_message, render_header, render_user_message
 
 load_dotenv()
 
 # No topo do app, antes de carregar a chain
 if not os.path.exists("db/chroma.sqlite3"):
-     print("⚙️ db/ não encontrado, rodando ingest...")
-     run_ingest()
+    print("⚙️ db/ não encontrado, rodando ingest...")
+    run_ingest()
 
 
 # ─── Typewriter ───────────────────────────────────────────
-def typewriter_stream(chain, query,delay=0.01):
+def typewriter_stream(chain, query, delay=0.01):
     for token in chain.stream(query):
         for char in token:
             yield char
             time.sleep(delay)
 
+
 # ─── Config ──────────────────────────────────────────────
 DOCUMENTS = ["manual_produtos", "relatorio_mensal", "vendas_maio2026"]
 
-st.set_page_config(
-    page_title="AI Document Chatbot",
-    page_icon="🤖",
-    layout="centered"
-)
+st.set_page_config(page_title="AI Document Chatbot", page_icon="🤖", layout="centered")
 st.markdown(get_css(), unsafe_allow_html=True)
+
 
 # ─── Pipeline RAG ────────────────────────────────────────
 @st.cache_resource
@@ -45,7 +46,7 @@ def load_chain():
     llm = ChatGroq(
         model="openai/gpt-oss-120b",
         temperature=0.3,
-        api_key=os.environ.get("GROQ_API_KEY")
+        api_key=os.environ.get("GROQ_API_KEY"),
     )
     retriever = db.as_retriever(search_kwargs={"k": 10})
 
@@ -58,6 +59,7 @@ def load_chain():
         | llm
         | StrOutputParser()
     )
+
 
 rag_chain = load_chain()
 
@@ -80,8 +82,8 @@ for msg in st.session_state.messages:
 # ─── Streaming ────────────────────────────────────────────
 if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
     last_query = st.session_state.messages[-1]["content"]
-    
-    response = st.write_stream(typewriter_stream(rag_chain,last_query))
+
+    response = st.write_stream(typewriter_stream(rag_chain, last_query))
 
     st.session_state.messages.append({"role": "assistant", "content": response})
     st.rerun()
