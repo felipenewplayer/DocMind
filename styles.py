@@ -11,9 +11,6 @@ def get_css() -> str:
         background-color: #212121;
         color: #ececec;
     }
-
-    header, footer { visibility: hidden; }
-
     .chat-container {
         max-width: 750px;
         margin: 0 auto;
@@ -83,10 +80,10 @@ def render_bot_message(content: str) -> str:
 
 
 def render_header(documents: list[str]) -> tuple[str, str]:
-    docs_html = " · ".join(
+    docs_html = " /  ".join(
         f'<b style="color:#c1cdec; font-size:15px">{doc}</b>' for doc in documents
     )
-    title = '<div class="chat-title">🤖 DocMind</div>'
+    title = '<div class="chat-title">DocMind</div>'
     subtitle = f'''<div class="chat-subtitle">
         Faça perguntas sobre os documentos abaixo e receba respostas precisas com base no conteúdo.<br><br>
         Documentos disponíveis: {docs_html}

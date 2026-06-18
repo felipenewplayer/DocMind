@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -9,14 +11,18 @@ from langchain_community.document_loaders import (
 )
 
 # ─── Configurações ───────────────────────────────────────
-DOCS_PATH = "docs"
-DB_PATH = "db"
+load_dotenv()
+BASE_DIR  = Path(__file__).resolve().parent.parent
+DOCS_PATH = Path(os.getenv("DOCS_PATH", BASE_DIR / "src" / "docs"))
+DB_PATH   = Path(os.getenv("DB_PATH",   BASE_DIR / "src" / "vectordb"))
+DOCS_PATH.mkdir(parents=True, exist_ok=True)
+DB_PATH.mkdir(parents=True, exist_ok=True)
 
 # ─── Carrega todos os documentos da pasta docs/ ──────────
-def load_all_docs(path: str):
+def load_all_docs(path: Path) -> list:
     docs = []
     for filename in os.listdir(path):
-        filepath = os.path.join(path, filename)
+        filepath = path / filename
         print(f"Carregando: {filename}")
 
         if filename.endswith(".pdf"):
@@ -56,10 +62,10 @@ def main():
     )
 
     print("💾 Criando Vector DB com Chroma...")
-    db = Chroma.from_documents(
+    Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
-        persist_directory=DB_PATH
+        persist_directory=str(DB_PATH)
     )
     print(f"✅ Vector DB salvo em '{DB_PATH}'\n")
     print("🎉 Ingest concluído! Pronto para subir no Hugging Face.")

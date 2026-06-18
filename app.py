@@ -8,15 +8,20 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
-from rag.ingest import main as run_ingest
-
-from prompt import prompt
+from src.ingest.ingest import main as run_ingest
+from pathlib import Path
+from src.prompt.prompt_template import rag_prompt
 from styles import get_css, render_bot_message, render_header, render_user_message
 
+
+#-----  #Configuracao ------
 load_dotenv()
 
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH  = BASE_DIR / "src" / "vectordb"
+
 # No topo do app, antes de carregar a chain
-if not os.path.exists("db/chroma.sqlite3"):
+if not (DB_PATH / "chroma.sqlite3").exists():
     print("⚙️ db/ não encontrado, rodando ingest...")
     run_ingest()
 
@@ -32,9 +37,30 @@ def typewriter_stream(chain, query, delay=0.01):
 # ─── Config ──────────────────────────────────────────────
 DOCUMENTS = ["manual_produtos", "relatorio_mensal", "vendas_maio2026"]
 
-st.set_page_config(page_title="AI Document Chatbot", page_icon="🤖", layout="centered")
+st.set_page_config(
+    page_title="AI Document Chatbot", 
+    page_icon="🤖", 
+    layout="centered",
+    initial_sidebar_state="collapsed"
+    )
+
 st.markdown(get_css(), unsafe_allow_html=True)
 
+# ─── Sidebar ─────────────────────────────────────────────
+
+with st.sidebar:
+    st.markdown("### ⚙️ Administração")
+    st.divider()
+    st.markdown("**Documentos indexados:**")
+    for doc in DOCUMENTS:
+        st.markdown(f"📄 {doc}")
+    st.divider()
+    if st.button("🔄 Reindexar documentos"):
+        with st.spinner("Reindexando..."):
+            run_ingest()
+            st.cache_resource.clear()
+        st.success("✅ Documentos reindexados com sucesso!")
+        st.rerun()
 
 # ─── Pipeline RAG ────────────────────────────────────────
 @st.cache_resource
@@ -42,9 +68,9 @@ def load_chain():
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
-    db = Chroma(persist_directory="db", embedding_function=embeddings)
+    db = Chroma(persist_directory=str(DB_PATH), embedding_function=embeddings)
     llm = ChatGroq(
-        model="openai/gpt-oss-120b",
+        model="llama-3.3-70b-versatile",
         temperature=0.3,
         api_key=os.environ.get("GROQ_API_KEY"),
     )
@@ -55,7 +81,7 @@ def load_chain():
 
     return (
         {"context": retriever | format_docs, "question": RunnablePassthrough()}
-        | prompt
+        | rag_prompt
         | llm
         | StrOutputParser()
     )
