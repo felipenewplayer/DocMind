@@ -55,6 +55,13 @@ def main():
     )
     chunks = splitter.split_documents(all_docs)
     print(f"✅ {len(chunks)} chunks gerados\n")
+    
+    chunks = [c for c in chunks if c.page_content.strip()]
+    print(f"✅ {len(chunks)} chunks válidos após filtro\n")
+
+    if not chunks:
+        print("❌ Nenhum chunk válido encontrado. Verifique os documentos.")
+        return
 
     print("🧠 Carregando embeddings (HuggingFace)...")
     embeddings = HuggingFaceEmbeddings(
