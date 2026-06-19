@@ -102,3 +102,40 @@
 2026-06-18 22:25:48,219 [INFO] ingest: ✅ Vector DB salvo em 'C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\vectordb'
 
 2026-06-18 22:25:48,222 [INFO] ingest: 🎉 Ingest concluído! Pronto para subir no Hugging Face.
+2026-06-19 00:00:07,597 [INFO] ingest: Carregando: manual_produtos.pdf
+2026-06-19 00:00:08,135 [WARNING] pypdf._reader: incorrect startxref pointer(1)
+2026-06-19 00:00:08,135 [WARNING] pypdf._reader: parsing for Object Streams
+2026-06-19 00:00:08,163 [INFO] ingest: Carregando: relatorio_mensal.txt
+2026-06-19 00:00:08,181 [INFO] ingest: Carregando: vendas_maio2026.xlsx
+2026-06-19 00:00:14,534 [INFO] ingest: 📂 Lendo documentos...
+2026-06-19 00:00:14,534 [INFO] ingest: ✅ 3 documento(s) carregado(s)
+
+2026-06-19 00:01:06,198 [INFO] ingest: Carregando: manual_produtos.pdf
+2026-06-19 00:01:06,514 [WARNING] pypdf._reader: incorrect startxref pointer(1)
+2026-06-19 00:01:06,514 [WARNING] pypdf._reader: parsing for Object Streams
+2026-06-19 00:01:06,536 [INFO] ingest: Carregando: relatorio_mensal.txt
+2026-06-19 00:01:06,536 [INFO] ingest: Carregando: vendas_maio2026.xlsx
+2026-06-19 00:01:10,740 [INFO] ingest: 📂 Lendo documentos...
+2026-06-19 00:01:10,740 [INFO] ingest: ✅ 3 documento(s) carregado(s)
+
+2026-06-19 00:01:10,742 [INFO] chunking: ✅ 5 chunks gerados
+
+2026-06-19 00:04:31,802 [INFO] ingest: Carregando: manual_produtos.pdf
+2026-06-19 00:04:32,205 [WARNING] pypdf._reader: incorrect startxref pointer(1)
+2026-06-19 00:04:32,206 [WARNING] pypdf._reader: parsing for Object Streams
+2026-06-19 00:04:32,226 [INFO] ingest: Carregando: relatorio_mensal.txt
+2026-06-19 00:04:32,245 [INFO] ingest: Carregando: vendas_maio2026.xlsx
+2026-06-19 00:04:37,702 [INFO] ingest: 📂 Lendo documentos...
+2026-06-19 00:04:37,702 [INFO] ingest: ✅ 3 documento(s) carregado(s)
+
+2026-06-19 00:04:37,703 [INFO] chunking: ✅ 5 chunks gerados
+
+2026-06-19 00:04:37,703 [INFO] ingest: ✅ 5 chunks válidos após filtro
+
+2026-06-19 00:04:37,704 [INFO] embeddings: 🧠 Carregando embeddings (HuggingFace)...
+2026-06-19 00:04:37,707 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-19 00:04:38,814 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-06-19 00:04:43,191 [INFO] criando: 💾 Criando Vector DB com Chroma...
+2026-06-19 00:04:44,844 [INFO] criando: ✅ Vector DB salvo em 'C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\vectordb'
+
+2026-06-19 00:04:44,845 [INFO] criando: 🎉 Ingest concluído! Pronto para subir no Hugging Face.

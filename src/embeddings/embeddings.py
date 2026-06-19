@@ -1,7 +1,7 @@
 from langchain_huggingface import HuggingFaceEmbeddings
 from logs.logs_config import get_logger
 
-logger = get_logger()
+logger = get_logger("embeddings")
 
 def load_embeddings():
     logger.info("🧠 Carregando embeddings (HuggingFace)...")
