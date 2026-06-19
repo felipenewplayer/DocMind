@@ -1,6 +1,8 @@
-src/vectordb/
+src/vectordb/*.sqlite3
+src/vectordb/*/
 .env
 .venv/
 __pycache__/
 *.pyc
 .vscode
+logs/*.log
