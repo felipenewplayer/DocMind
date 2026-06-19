@@ -5,49 +5,64 @@ import streamlit as st
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
 from src.ingest.ingest import main as run_ingest
 from pathlib import Path
 from src.prompt.prompt_template import rag_prompt
 from styles import get_css, render_bot_message, render_header, render_user_message
+from logs.logs_config import get_logger
 
-
-#-----  #Configuracao ------
+# ---- Log -------------------------------------------------
+logger = get_logger("app")
+# ───  Configuração ─────────────────────────────────────────
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH  = BASE_DIR / "src" / "vectordb"
 
-# No topo do app, antes de carregar a chain
-if not (DB_PATH / "chroma.sqlite3").exists():
-    print("⚙️ db/ não encontrado, rodando ingest...")
-    run_ingest()
+@st.cache_resource
+def ensure_vectordb():
+    if not (DB_PATH / "chroma.sqlite3").exists():
+        logger.info("⚙️ vectordb não encontrado, rodando ingest...")
+        run_ingest()
+    return True
 
+ensure_vectordb()
+
+# ─── Formata histórico para o prompt ──────────────────────
+def format_history(messages, limit=6):
+    recent = messages[-limit:]
+    lines = []
+    for m in recent:
+        role = "Usuário" if m["role"] == "user" else "Assistente"
+        lines.append(f"{role}: {m['content']}")
+    return "\n".join(lines) if lines else "Nenhuma conversa anterior."
 
 # ─── Typewriter ───────────────────────────────────────────
-def typewriter_stream(chain, query, delay=0.01):
-    for token in chain.stream(query):
+def typewriter_stream(chain, query, history, delay=0.01):
+    input_data = {
+        "question": query,
+        "chat_history": format_history(history)
+    }
+    for token in chain.stream(input_data):
         for char in token:
             yield char
             time.sleep(delay)
-
 
 # ─── Config ──────────────────────────────────────────────
 DOCUMENTS = ["manual_produtos", "relatorio_mensal", "vendas_maio2026"]
 
 st.set_page_config(
-    page_title="AI Document Chatbot", 
-    page_icon="🤖", 
+    page_title="AI Document Chatbot",
+    page_icon="🤖",
     layout="centered",
     initial_sidebar_state="collapsed"
-    )
+)
 
 st.markdown(get_css(), unsafe_allow_html=True)
 
 # ─── Sidebar ─────────────────────────────────────────────
-
 with st.sidebar:
     st.markdown("### ⚙️ Administração")
     st.divider()
@@ -80,12 +95,15 @@ def load_chain():
         return "\n\n".join(doc.page_content for doc in docs)
 
     return (
-        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        {
+            "context": (lambda x: x["question"]) | retriever | format_docs,
+            "question": lambda x: x["question"],
+            "chat_history": lambda x: x["chat_history"],
+        }
         | rag_prompt
         | llm
         | StrOutputParser()
     )
-
 
 rag_chain = load_chain()
 
@@ -108,8 +126,9 @@ for msg in st.session_state.messages:
 # ─── Streaming ────────────────────────────────────────────
 if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
     last_query = st.session_state.messages[-1]["content"]
+    history = st.session_state.messages[:-1]
 
-    response = st.write_stream(typewriter_stream(rag_chain, last_query))
+    response = st.write_stream(typewriter_stream(rag_chain, last_query, history))
 
     st.session_state.messages.append({"role": "assistant", "content": response})
     st.rerun()

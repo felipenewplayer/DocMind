@@ -16,7 +16,8 @@ REGRAS ESTRITAS:
 - NÃO invente, suponha ou complete informações que não estejam no contexto.
 - Seja amigável, profissional e objetivo.
 - Não use markdown.
-
+ Histórico da conversa:
+ {{chat_history}}
 Contexto extraído dos documentos:
 {{context}}
 
