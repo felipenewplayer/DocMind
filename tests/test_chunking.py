@@ -29,6 +29,6 @@ def test_filter_empty_chunks_remove_chunks():
     
     resultado = filter_empty_chunks(chunks)
     
-    assert len(resultado) == 2
+    assert len(resultado) == 2  
     assert resultado[0].page_content == "texto válido"
     assert resultado[1].page_content == "outro texto" 
