@@ -175,3 +175,14 @@
 2026-06-20 16:58:28,895 [INFO] ingest: DEBUG - Conteúdo: [WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/manual_produtos.pdf'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/relatorio_mensal.txt'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/vendas_maio2026.xlsx')]
 2026-06-20 16:58:29,259 [INFO] sentence_transformers.base.model: No device provided, using cpu
 2026-06-20 16:58:30,625 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-06-20 18:32:12,725 [INFO] ingest: DEBUG - DOCS_PATH resolvido: C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\docs
+2026-06-20 18:32:12,728 [INFO] ingest: DEBUG - DOCS_PATH existe? True
+2026-06-20 18:32:12,729 [INFO] ingest: DEBUG - Conteúdo: [WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/manual_produtos.pdf'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/relatorio_mensal.txt'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/vendas_maio2026.xlsx')]
+2026-06-20 18:32:19,819 [INFO] ingest: DEBUG - DOCS_PATH resolvido: C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\docs
+2026-06-20 18:32:19,819 [INFO] ingest: DEBUG - DOCS_PATH existe? True
+2026-06-20 18:32:19,820 [INFO] ingest: DEBUG - Conteúdo: [WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/manual_produtos.pdf'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/relatorio_mensal.txt'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/vendas_maio2026.xlsx')]
+2026-06-20 18:32:32,933 [INFO] ingest: DEBUG - DOCS_PATH resolvido: C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\docs
+2026-06-20 18:32:32,934 [INFO] ingest: DEBUG - DOCS_PATH existe? True
+2026-06-20 18:32:32,935 [INFO] ingest: DEBUG - Conteúdo: [WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/manual_produtos.pdf'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/relatorio_mensal.txt'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/vendas_maio2026.xlsx')]
+2026-06-20 18:55:39,149 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-20 18:55:40,302 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.

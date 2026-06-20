@@ -2,63 +2,23 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-from langchain_community.document_loaders import (
-    PyPDFLoader,
-    TextLoader,
-    UnstructuredExcelLoader
-)
-from src.chunking.chunking import split_into_chunks
+from src.load_docs.load_docs import load_all_docs
+from src.chunking.chunking import split_into_chunks, filter_empty_chunks
 from src.embeddings.embeddings import load_embeddings
 from src.vectordb.criando import save_to_vectordb
 from logs.logs_config import get_logger
 
+# ---- Log -----
 logger = get_logger("ingest")
 
+# ----- Configuração -----------
 load_dotenv()
+
 BASE_DIR  = Path(__file__).resolve().parent.parent.parent
 DOCS_PATH = Path(os.getenv("DOCS_PATH", BASE_DIR / "src" / "docs"))
 DB_PATH   = Path(os.getenv("DB_PATH",   BASE_DIR / "src" / "vectordb"))
 DOCS_PATH.mkdir(parents=True, exist_ok=True)
 DB_PATH.mkdir(parents=True, exist_ok=True)
-
-# DEBUG temporário
-logger.info(f"DEBUG - DOCS_PATH resolvido: {DOCS_PATH}")
-logger.info(f"DEBUG - DOCS_PATH existe? {DOCS_PATH.exists()}")
-if DOCS_PATH.exists():
-    logger.info(f"DEBUG - Conteúdo: {list(DOCS_PATH.iterdir())}")
-
-
-def load_all_docs(path: Path) -> list:
-    docs = []
-    for filename in os.listdir(path):
-        filepath = path / filename
-        logger.info(f"Carregando: {filename}")
-
-        if filename.endswith(".pdf"):
-            loader = PyPDFLoader(filepath)
-            docs.extend(loader.load())
-        elif filename.endswith(".txt"):
-            loader = TextLoader(filepath, encoding="utf-8")
-            docs.extend(loader.load())
-        elif filename.endswith(".xlsx"):
-            loader = UnstructuredExcelLoader(filepath)
-            docs.extend(loader.load())
-        else:
-            logger.info(f"  ⚠️ Formato não suportado, pulando: {filename}")
-
-    logger.info("📂 Lendo documentos...")
-    logger.info(f"✅ {len(docs)} documento(s) carregado(s)\n")
-    return docs
-
-
-def filter_empty_chunks(chunks: list) -> list:
-    """Remove chunks com conteúdo vazio ou só com espaço."""
-    filtrados = [c for c in chunks if c.page_content.strip()]
-    if not filtrados:
-        logger.error("Nenhum chunk válido encontrado. Verifique os documentos.")
-        return []
-    logger.info(f"✅ {len(filtrados)} chunks válidos após filtro\n")
-    return filtrados
 
 
 def main():
