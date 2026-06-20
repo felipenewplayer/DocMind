@@ -21,6 +21,12 @@ DB_PATH   = Path(os.getenv("DB_PATH",   BASE_DIR / "src" / "vectordb"))
 DOCS_PATH.mkdir(parents=True, exist_ok=True)
 DB_PATH.mkdir(parents=True, exist_ok=True)
 
+# DEBUG temporário
+logger.info(f"DEBUG - DOCS_PATH resolvido: {DOCS_PATH}")
+logger.info(f"DEBUG - DOCS_PATH existe? {DOCS_PATH.exists()}")
+if DOCS_PATH.exists():
+    logger.info(f"DEBUG - Conteúdo: {list(DOCS_PATH.iterdir())}")
+
 
 def load_all_docs(path: Path) -> list:
     docs = []

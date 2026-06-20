@@ -139,3 +139,31 @@
 2026-06-19 00:04:44,844 [INFO] criando: ✅ Vector DB salvo em 'C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\vectordb'
 
 2026-06-19 00:04:44,845 [INFO] criando: 🎉 Ingest concluído! Pronto para subir no Hugging Face.
+2026-06-19 00:10:38,431 [INFO] ingest: Carregando: manual_produtos.pdf
+2026-06-19 00:10:38,734 [WARNING] pypdf._reader: incorrect startxref pointer(1)
+2026-06-19 00:10:38,735 [WARNING] pypdf._reader: parsing for Object Streams
+2026-06-19 00:10:38,753 [INFO] ingest: Carregando: relatorio_mensal.txt
+2026-06-19 00:10:38,754 [INFO] ingest: Carregando: vendas_maio2026.xlsx
+2026-06-19 00:10:42,723 [INFO] ingest: 📂 Lendo documentos...
+2026-06-19 00:10:42,724 [INFO] ingest: ✅ 3 documento(s) carregado(s)
+
+2026-06-19 00:10:42,725 [INFO] chunking: ✅ 5 chunks gerados
+
+2026-06-19 00:10:42,726 [INFO] ingest: ✅ 5 chunks válidos após filtro
+
+2026-06-19 00:10:42,726 [INFO] embeddings: 🧠 Carregando embeddings (HuggingFace)...
+2026-06-19 00:10:42,729 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-19 00:10:43,739 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-06-19 00:10:47,644 [INFO] criando: 💾 Criando Vector DB com Chroma...
+2026-06-19 00:10:48,331 [INFO] criando: ✅ Vector DB salvo em 'C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\vectordb'
+
+2026-06-19 00:10:48,331 [INFO] criando: 🎉 Ingest concluído! Pronto para subir no Hugging Face.
+2026-06-19 20:43:18,649 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-19 20:43:19,362 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-06-19 20:43:19,480 [WARNING] huggingface_hub.utils._http: '[Errno 11001] getaddrinfo failed' thrown while requesting HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json
+2026-06-19 20:43:19,480 [WARNING] huggingface_hub.utils._http: Retrying in 1s [Retry 1/5].
+2026-06-19 20:47:56,954 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-19 20:47:58,061 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-06-19 21:29:42,719 [INFO] ingest: DEBUG - DOCS_PATH resolvido: C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\docs
+2026-06-19 21:29:42,720 [INFO] ingest: DEBUG - DOCS_PATH existe? True
+2026-06-19 21:29:42,721 [INFO] ingest: DEBUG - Conteúdo: [WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/manual_produtos.pdf'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/relatorio_mensal.txt'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/vendas_maio2026.xlsx')]
