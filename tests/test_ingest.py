@@ -1,3 +1,4 @@
+#Código que testa as funções do ingest.py
 from src.ingest.ingest import filter_empty_chunks
 
 class FakeChunk:
@@ -5,7 +6,6 @@ class FakeChunk:
     def __init__(self, content):
         self.page_content = content
         
-
 def test_filter_empty_chunks_remove_chunks():
     chunks = [
         FakeChunk("texto válido"),

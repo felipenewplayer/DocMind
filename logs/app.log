@@ -167,3 +167,11 @@
 2026-06-19 21:29:42,719 [INFO] ingest: DEBUG - DOCS_PATH resolvido: C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\docs
 2026-06-19 21:29:42,720 [INFO] ingest: DEBUG - DOCS_PATH existe? True
 2026-06-19 21:29:42,721 [INFO] ingest: DEBUG - Conteúdo: [WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/manual_produtos.pdf'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/relatorio_mensal.txt'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/vendas_maio2026.xlsx')]
+2026-06-19 21:35:15,256 [INFO] ingest: DEBUG - DOCS_PATH resolvido: C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\docs
+2026-06-19 21:35:15,257 [INFO] ingest: DEBUG - DOCS_PATH existe? True
+2026-06-19 21:35:15,257 [INFO] ingest: DEBUG - Conteúdo: [WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/manual_produtos.pdf'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/relatorio_mensal.txt'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/vendas_maio2026.xlsx')]
+2026-06-20 16:58:28,893 [INFO] ingest: DEBUG - DOCS_PATH resolvido: C:\Users\felip\Desktop\Python2026\Projetos IA\ai-agent-demo\src\docs
+2026-06-20 16:58:28,894 [INFO] ingest: DEBUG - DOCS_PATH existe? True
+2026-06-20 16:58:28,895 [INFO] ingest: DEBUG - Conteúdo: [WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/manual_produtos.pdf'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/relatorio_mensal.txt'), WindowsPath('C:/Users/felip/Desktop/Python2026/Projetos IA/ai-agent-demo/src/docs/vendas_maio2026.xlsx')]
+2026-06-20 16:58:29,259 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-20 16:58:30,625 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
