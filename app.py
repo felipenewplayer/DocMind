@@ -1,17 +1,19 @@
 import os
 import time
-
 import streamlit as st
+from pathlib import Path
 from dotenv import load_dotenv
+
 from langchain_chroma import Chroma
 from langchain_core.output_parsers import StrOutputParser
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
+
 from src.ingest.ingest import main as run_ingest
-from pathlib import Path
 from src.prompt.prompt_template import rag_prompt
-from styles import get_css, render_bot_message, render_header, render_user_message
+from src.retrieval.retriever import get_retriever
 from logs.logs_config import get_logger
+from styles import get_css, render_bot_message, render_header, render_user_message
 
 # ---- Log -------------------------------------------------
 logger = get_logger("app")
@@ -89,7 +91,8 @@ def load_chain():
         temperature=0.3,
         api_key=os.environ.get("GROQ_API_KEY"),
     )
-    retriever = db.as_retriever(search_kwargs={"k": 10})
+
+    retriever = get_retriever(db, k=5)
 
     def format_docs(docs):
         return "\n\n".join(doc.page_content for doc in docs)
