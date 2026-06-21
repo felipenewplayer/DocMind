@@ -21,7 +21,7 @@ logger = get_logger("app")
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
-DB_PATH  = BASE_DIR / "src" / "vectordb"
+DB_PATH  = BASE_DIR / "data" / "vectordb"
 
 @st.cache_resource
 def ensure_vectordb():
@@ -95,7 +95,7 @@ def load_chain():
     retriever = get_retriever(db, k=5)
 
     def format_docs(docs):
-        return "\n\n".join(doc.page_content for doc in docs)
+      return "\n\n".join(doc.page_content for doc in docs)
 
     return (
         {

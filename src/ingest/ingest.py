@@ -16,7 +16,7 @@ load_dotenv()
 
 BASE_DIR  = Path(__file__).resolve().parent.parent.parent
 DOCS_PATH = Path(os.getenv("DOCS_PATH", BASE_DIR / "src" / "docs"))
-DB_PATH   = Path(os.getenv("DB_PATH",   BASE_DIR / "src" / "vectordb"))
+DB_PATH   = Path(os.getenv("DB_PATH",   BASE_DIR / "data" / "vectordb"))
 DOCS_PATH.mkdir(parents=True, exist_ok=True)
 DB_PATH.mkdir(parents=True, exist_ok=True)
 
