@@ -409,3 +409,8 @@ A TechSolutions registrou
 2026-06-20 22:23:19,898 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
 2026-06-20 22:23:26,853 [INFO] sentence_transformers.base.model: No device provided, using cpu
 2026-06-20 22:23:27,218 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-06-20 22:23:43,016 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-20 22:23:43,382 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-06-22 21:26:26,463 [INFO] sentence_transformers.base.model: No device provided, using cpu
+2026-06-22 21:26:28,698 [INFO] sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-06-22 21:26:34,062 [INFO] llm: Carregando llm...

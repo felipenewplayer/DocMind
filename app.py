@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 
 from langchain_chroma import Chroma
 from langchain_core.output_parsers import StrOutputParser
-from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
 
+from src.llm.llm import get_llm
 from src.ingest.ingest import main as run_ingest
 from src.prompt.prompt_template import rag_prompt
 from src.retrieval.retriever import get_retriever
@@ -17,6 +17,7 @@ from styles import get_css, render_bot_message, render_header, render_user_messa
 
 # ---- Log -------------------------------------------------
 logger = get_logger("app")
+
 # ───  Configuração ─────────────────────────────────────────
 load_dotenv()
 
@@ -35,7 +36,7 @@ ensure_vectordb()
 # ─── Formata histórico para o prompt ──────────────────────
 def format_history(messages, limit=6):
     recent = messages[-limit:]
-    lines = []
+    lines= []
     for m in recent:
         role = "Usuário" if m["role"] == "user" else "Assistente"
         lines.append(f"{role}: {m['content']}")
@@ -86,11 +87,7 @@ def load_chain():
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
     db = Chroma(persist_directory=str(DB_PATH), embedding_function=embeddings)
-    llm = ChatGroq(
-        model="llama-3.3-70b-versatile",
-        temperature=0.3,
-        api_key=os.environ.get("GROQ_API_KEY"),
-    )
+    llm = get_llm()
 
     retriever = get_retriever(db, k=5)
 
