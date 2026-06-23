@@ -25,5 +25,22 @@ jobs:
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: pytest tests/ -v
-        
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Deploy para Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git remote add huggingface https://Felipe-2026:${HF_TOKEN}@huggingface.co/spaces/Felipe-2026/ai-agent-demo
+          git push huggingface main --force 
+
+
     
