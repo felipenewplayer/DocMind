@@ -12,23 +12,38 @@ from src.ingest.ingest import main as run_ingest
 from src.prompt.prompt_template import rag_prompt
 from src.retrieval.retriever import get_retriever
 from logs.logs_config import get_logger
-from styles import get_css, render_bot_message, render_header, render_user_message
-
-from src.load_docs.upload import load_uploaded_file
-from src.chunking.chunking import split_into_chunks, filter_empty_chunks
-from src.embeddings.embeddings import load_embeddings
-from src.vectordb.criando import add_to_vectordb
+from src.app.header import get_header
+from src.app.side_bar import side_bar
 from src.retrieval.retriever import get_documentos_disponiveis
+
+from styles import get_css, render_bot_message, render_user_message
 
 # ---- Log -------------------------------------------------
 logger = get_logger("app")
 
-# ───  Configuração ─────────────────────────────────────────
+# ───  Configuração ────────────────────────────────────────
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH  = BASE_DIR / "data" / "vectordb"
 
+DOCUMENTS = ["manual_produtos", "relatorio_mensal", "vendas_maio2026"]
+
+st.set_page_config(
+    page_title="AI Document Chatbot",
+    page_icon="🤖",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+# ─── Header ───────────────────────────────────────────────
+get_header(DOCUMENTS)
+
+# ─── Sidebar ─────────────────────────────────────────────
+side_bar()
+
+st.markdown(get_css(), unsafe_allow_html=True)
+
+# ---- Criando o banco de dados no huggingface ───────────────
 @st.cache_resource
 def ensure_vectordb():
     if not (DB_PATH / "chroma.sqlite3").exists():
@@ -57,47 +72,6 @@ def typewriter_stream(chain, query, history, delay=0.01):
         for char in token:
             yield char
             time.sleep(delay)
-
-# ─── Config ──────────────────────────────────────────────
-DOCUMENTS = ["manual_produtos", "relatorio_mensal", "vendas_maio2026"]
-
-st.set_page_config(
-    page_title="AI Document Chatbot",
-    page_icon="🤖",
-    layout="centered",
-    initial_sidebar_state="collapsed"
-)
-
-st.markdown(get_css(), unsafe_allow_html=True)
-
-# ─── Sidebar ─────────────────────────────────────────────
-with st.sidebar:
-    st.markdown("### **Documentos indexados:**")
-    st.divider()
-    for doc in DOCUMENTS:
-        st.markdown(f"📄 {doc}")
-    st.divider()
-    st.markdown("**Adicionar novo documento:**")
-    arquivo_enviado = st.file_uploader(
-        "Envie um PDF, TXT ou XLSX",
-        type=["pdf", "txt", "xlsx"]
-    )
-    if arquivo_enviado is not None:
-        if st.button("📥 Processar e adicionar"):
-            with st.spinner("Processando novo documento..."):
-                novos_docs = load_uploaded_file(arquivo_enviado)
-                novos_chunks = split_into_chunks(novos_docs)
-                novos_chunks = filter_empty_chunks(novos_chunks)
-
-                if novos_chunks:
-                    embeddings = load_embeddings()
-                    add_to_vectordb(novos_chunks, embeddings, DB_PATH)
-                    st.cache_resource.clear()
-                    st.success(f"✅ '{arquivo_enviado.name}' adicionado com sucesso!")
-                    st.rerun()
-                else:
-                    st.error("❌ Não foi possível extrair conteúdo desse arquivo.")
-
 
 # ─── Pipeline RAG ────────────────────────────────────────
 @st.cache_resource
@@ -130,11 +104,6 @@ rag_chain = load_chain()
 # ─── Estado ───────────────────────────────────────────────
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
-# ─── Header ───────────────────────────────────────────────
-title, subtitle = render_header(DOCUMENTS)
-st.markdown(title, unsafe_allow_html=True)
-st.markdown(subtitle, unsafe_allow_html=True)
 
 # ─── Histórico ────────────────────────────────────────────
 for msg in st.session_state.messages:
