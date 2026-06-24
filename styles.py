@@ -85,7 +85,7 @@ def render_header(documents: list[str]) -> tuple[str, str]:
     )
     title = '<div class="chat-title">DocMind</div>'
     subtitle = f'''<div class="chat-subtitle">
-        Faça perguntas sobre os documentos abaixo e receba respostas precisas com base no conteúdo.<br><br>
+        Faça perguntas sobre os documentos abaixo ou adicione seus documentos e receba respostas precisas com base no conteúdo.<br><br>
         Documentos disponíveis: {docs_html}
     </div>'''
     return title, subtitle
