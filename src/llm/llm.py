@@ -22,10 +22,11 @@ modelo_fallback = ChatGroq(
 )
 
 def get_llm():
-    logger.info("Carregando llm...")
+    logger.info("Carregando LLM...")
     llm = modelo_principal.with_fallbacks(
         [modelo_fallback
          ],
     )
+    logger.info("LLM carregada")
     return llm
     

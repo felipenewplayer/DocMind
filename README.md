@@ -52,31 +52,19 @@ O DocMind responde perguntas em linguagem natural com base no conteúdo de docum
 ## 🏗️ Arquitetura
 
 O pipeline de ingestão é modularizado por responsabilidade, em vez de uma única função fazendo tudo:
+
 src/
-
 ├── load_docs/      # Carrega PDF, TXT, XLSX
-
 ├── chunking/        # Divide documentos em chunks + filtra vazios
-
 ├── embeddings/       # Carrega o modelo de embeddings
-
 ├── vectordb/         # Cria e persiste o banco vetorial (Chroma)
-
 ├── ingest/           # Orquestra o pipeline (chama os módulos acima)
-
 ├── prompt/            # Template do prompt RAG
-
 logs/
-
 ├── logs_config.py    # Configuração centralizada de logging
-
 tests/
-
 ├── test_app.py        # Testes de format_history()
-
 ├── test_chunking.py   # Testes de split_into_chunks() e filter_empty_chunks()
-
-Essa separação permite testar cada etapa isoladamente e facilita a manutenção — um bug no chunking não exige reler todo o pipeline de ingestão.
 
 ### Memória de conversa
 
@@ -100,24 +88,28 @@ pytest tests/ -v
 
 ---
 
-## 🐛 Desafios de deploy (e como foram resolvidos)
+## 🔄 CI/CD
 
-Durante o deploy no Hugging Face Spaces, o app funcionava localmente mas falhava em produção. A investigação revelou dois bugs específicos de ambiente:
+O projeto conta com um pipeline de integração e entrega contínua usando **GitHub Actions**, com dois estágios sequenciais:
 
-1. **Path duplicado**: `BASE_DIR` era calculado com uma quantidade de `.parent` que funcionava localmente, mas resolvia para `/app/src/src/docs` no container do Hugging Face (uma camada de diretório diferente da estrutura local). Resolvido ajustando a contagem de `.parent` e validando com logs de debug temporários.
-2. **Dependência faltante**: o `UnstructuredExcelLoader` falhava silenciosamente em produção por falta da biblioteca `msoffcrypto-tool`, que não estava listada no `requirements.txt`.
+1. **CI (Integração Contínua)**: a cada push na branch `main`, os testes automatizados (`pytest`) são executados em um ambiente Linux limpo, validando que nenhuma mudança quebrou funcionalidades existentes.
+2. **CD (Entrega Contínua)**: se os testes passarem, o deploy para o Hugging Face Spaces acontece automaticamente — sem necessidade de push manual.
 
-Esse processo reforçou a importância de testar o ambiente de produção como uma "caixa preta" separada do ambiente local, e de usar logging estratégico para diagnosticar problemas sem acesso direto ao servidor.
+Credenciais sensíveis (chave de API do Groq, token do Hugging Face) são gerenciadas via **GitHub Secrets**, nunca expostas no código.
 
----
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # roda pytest
 
-## 🔮 Limitações e próximos passos
+  deploy:
+    needs: test  # só executa se os testes passarem
+    runs-on: ubuntu-latest
+    # faz push automático para o Hugging Face
+```
 
-Documentado de forma transparente, como parte do aprendizado:
-
-- **Memória de sessão volátil**: o histórico de conversa vive em `st.session_state`, que é perdido ao fechar a aba. Em produção real, isso seria substituído por `RunnableWithMessageHistory` com um store persistente (Redis ou Postgres) para suportar múltiplos usuários e sessões duradouras.
-- **Sem controle de tokens no histórico**: o histórico é limitado por número de mensagens (não por tokens), o que pode não escalar bem para conversas muito longas.
-- **Testes cobrem apenas funções puras**: módulos que dependem de API externa (Groq, embeddings) ainda não têm testes com mocks.
+Esse pipeline garante que código com testes falhando nunca chega à produção.
 
 ---
 

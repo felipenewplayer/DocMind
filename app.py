@@ -1,4 +1,3 @@
-import os
 import time
 import streamlit as st
 from pathlib import Path
@@ -14,6 +13,12 @@ from src.prompt.prompt_template import rag_prompt
 from src.retrieval.retriever import get_retriever
 from logs.logs_config import get_logger
 from styles import get_css, render_bot_message, render_header, render_user_message
+
+from src.load_docs.upload import load_uploaded_file
+from src.chunking.chunking import split_into_chunks, filter_empty_chunks
+from src.embeddings.embeddings import load_embeddings
+from src.vectordb.criando import add_to_vectordb
+from src.retrieval.retriever import get_documentos_disponiveis
 
 # ---- Log -------------------------------------------------
 logger = get_logger("app")
@@ -67,18 +72,32 @@ st.markdown(get_css(), unsafe_allow_html=True)
 
 # ─── Sidebar ─────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### ⚙️ Administração")
+    st.markdown("### **Documentos indexados:**")
     st.divider()
-    st.markdown("**Documentos indexados:**")
     for doc in DOCUMENTS:
         st.markdown(f"📄 {doc}")
     st.divider()
-    if st.button("🔄 Reindexar documentos"):
-        with st.spinner("Reindexando..."):
-            run_ingest()
-            st.cache_resource.clear()
-        st.success("✅ Documentos reindexados com sucesso!")
-        st.rerun()
+    st.markdown("**Adicionar novo documento:**")
+    arquivo_enviado = st.file_uploader(
+        "Envie um PDF, TXT ou XLSX",
+        type=["pdf", "txt", "xlsx"]
+    )
+    if arquivo_enviado is not None:
+        if st.button("📥 Processar e adicionar"):
+            with st.spinner("Processando novo documento..."):
+                novos_docs = load_uploaded_file(arquivo_enviado)
+                novos_chunks = split_into_chunks(novos_docs)
+                novos_chunks = filter_empty_chunks(novos_chunks)
+
+                if novos_chunks:
+                    embeddings = load_embeddings()
+                    add_to_vectordb(novos_chunks, embeddings, DB_PATH)
+                    st.cache_resource.clear()
+                    st.success(f"✅ '{arquivo_enviado.name}' adicionado com sucesso!")
+                    st.rerun()
+                else:
+                    st.error("❌ Não foi possível extrair conteúdo desse arquivo.")
+
 
 # ─── Pipeline RAG ────────────────────────────────────────
 @st.cache_resource
@@ -99,6 +118,7 @@ def load_chain():
             "context": (lambda x: x["question"]) | retriever | format_docs,
             "question": lambda x: x["question"],
             "chat_history": lambda x: x["chat_history"],
+            "documentos_disponiveis": lambda x: ", ".join(get_documentos_disponiveis(db)),
         }
         | rag_prompt
         | llm

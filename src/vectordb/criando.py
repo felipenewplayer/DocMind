@@ -18,3 +18,15 @@ def save_to_vectordb(chunks, embeddings, DB_PATH):
     logger.info(f"✅ Vector DB salvo em '{DB_PATH}'\n")
     logger.info("🎉 Ingest concluído! Pronto para subir no Hugging Face.")
     return db
+
+def add_to_vectordb(chunks, embeddings, DB_PATH):
+    logger.info("➕ Adicionando novos documentos ao Vector DB existente...")
+    
+    db = Chroma(
+        persist_directory=str(DB_PATH),
+        embedding_function=embeddings
+    )
+    db.add_documents(chunks)
+    
+    logger.info(f"✅ {len(chunks)} novo(s) chunk(s) adicionado(s) com sucesso!")
+    return db
