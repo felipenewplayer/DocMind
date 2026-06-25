@@ -7,11 +7,11 @@ from langchain_chroma import Chroma
 from langchain_core.output_parsers import StrOutputParser
 from langchain_huggingface import HuggingFaceEmbeddings
 
+from logs.logs_config import get_logger
 from src.llm.llm import get_llm
 from src.ingest.ingest import main as run_ingest
 from src.prompt.prompt_template import rag_prompt
 from src.retrieval.retriever import get_retriever
-from logs.logs_config import get_logger
 from src.app.header import get_header
 from src.app.side_bar import side_bar
 from src.retrieval.retriever import get_documentos_disponiveis
