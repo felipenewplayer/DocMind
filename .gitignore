@@ -1,0 +1,11 @@
+data/vectordb/
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.vscode
+logs/*.log
+.pytest_cache/
+checkdb.py
+**tempCodeRunnerFile.py
