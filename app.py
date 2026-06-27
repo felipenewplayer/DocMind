@@ -81,9 +81,8 @@ def load_chain():
     )
     db = Chroma(persist_directory=str(DB_PATH), embedding_function=embeddings)
     llm = get_llm()
-
     retriever = get_retriever(db, k=5)
-
+    get_documentos_disponiveis(db)
     def format_docs(docs):
       return "\n\n".join(doc.page_content for doc in docs)
 

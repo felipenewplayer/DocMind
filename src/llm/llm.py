@@ -28,4 +28,3 @@ def get_llm():
     )
     logger.info("LLM carregada")
     return llm
-    

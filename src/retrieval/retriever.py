@@ -5,9 +5,7 @@ from logs.logs_config import get_logger
 logger = get_logger("retriever")
 
 def get_retriever(db, k=5):
-    logger.info("Fazendo o retriever...")
     return db.as_retriever(search_kwargs={"k": k})
-
 
 def get_documentos_disponiveis(db) -> list:
     all_docs = db.get()
@@ -19,5 +17,5 @@ def get_documentos_disponiveis(db) -> list:
         if caminho:
             nome = Path(caminho).stem
             nomes.add(nome)
-    
+    logger.info(f"**** Documentos Diponíveis ****\n {nomes}")
     return list(nomes)

@@ -3,7 +3,7 @@ from pathlib import Path
 from src.load_docs.upload import load_uploaded_file
 from src.chunking.chunking import split_into_chunks, filter_empty_chunks
 from src.embeddings.embeddings import load_embeddings
-from src.vectordb.criando import add_to_vectordb
+from src.vectordb.vector_manager import add_to_vectordb
 
 DOCUMENTS = ["manual_produtos", "relatorio_mensal", "vendas_maio2026"]
 BASE_DIR = Path(__file__).resolve().parent.parent.parent

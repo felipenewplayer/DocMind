@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from src.load_docs.load_docs import load_all_docs
 from src.chunking.chunking import split_into_chunks, filter_empty_chunks
 from src.embeddings.embeddings import load_embeddings
-from src.vectordb.criando import save_to_vectordb
+from src.vectordb.vector_manager import save_to_vectordb
 from logs.logs_config import get_logger
 
 # ---- Log -----
