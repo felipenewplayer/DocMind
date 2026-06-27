@@ -6,7 +6,7 @@ from src.embeddings.embeddings import load_embeddings
 from src.vectordb.criando import add_to_vectordb
 
 DOCUMENTS = ["manual_produtos", "relatorio_mensal", "vendas_maio2026"]
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DB_PATH  = BASE_DIR / "data" / "vectordb"
 
 def side_bar():
