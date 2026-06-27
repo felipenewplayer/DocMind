@@ -8,7 +8,6 @@ logger = get_logger("llm")
 
 load_dotenv()
 
-
 modelo_principal = ChatGroq(
     model="llama-3.3-70b-versatile",
     temperature=0.3,
