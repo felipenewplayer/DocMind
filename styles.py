@@ -1,3 +1,5 @@
+import markdown as md
+
 def get_css() -> str:
     
     return """
@@ -66,9 +68,10 @@ def get_css() -> str:
 
 
 def render_user_message(content: str) -> str:
+    content_html = md.markdown(content, extensions=["nl2br", "sane_lists"])    
     return (
         f'<div class="msg-label">Você :</div>'
-        f'<div class="msg-user">{content}</div>'
+        f'<div class="msg-user">{content_html}</div>'
     )
 
 
@@ -79,13 +82,9 @@ def render_bot_message(content: str) -> str:
     )
 
 
-def render_header(documents: list[str]) -> tuple[str, str]:
-    docs_html = " /  ".join(
-        f'<b style="color:#c1cdec; font-size:15px">{doc}</b>' for doc in documents
-    )
+def render_header():
     title = '<div class="chat-title">DocMind</div>'
     subtitle = f'''<div class="chat-subtitle">
-        Faça perguntas sobre os documentos abaixo ou adicione seus documentos e receba respostas precisas com base no conteúdo.<br><br>
-        Documentos disponíveis: {docs_html}
+         Adicione seus documentos e receba respostas precisas com base no conteúdo.
     </div>'''
     return title, subtitle

@@ -45,6 +45,7 @@ logging.basicConfig(
 # Silencia logs verbosos de bibliotecas externas
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger("huggingface_hub").setLevel(logging.WARNING)
 
 def get_logger(name: str):
     return logging.getLogger(name)

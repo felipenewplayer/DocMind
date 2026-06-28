@@ -10,13 +10,13 @@ load_dotenv()
 
 modelo_principal = ChatGroq(
     model="llama-3.3-70b-versatile",
-    temperature=0.3,
+    temperature=0.5,
     api_key=os.getenv("GROQ_API_KEY")
 )
 
 modelo_fallback = ChatGroq(
     model="openai/gpt-oss-120b",
-    temperature=0.3,
+    temperature=0.5,
     api_key=os.getenv("GROQ_API_KEY")
 )
 

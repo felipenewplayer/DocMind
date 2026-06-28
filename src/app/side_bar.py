@@ -2,8 +2,7 @@ import streamlit as st
 from pathlib import Path
 from src.load_docs.upload import load_uploaded_file
 from src.chunking.chunking import split_into_chunks, filter_empty_chunks
-from src.embeddings.embeddings import load_embeddings
-from src.vectordb.vector_manager import get_documentos_disponiveis,salva_no_vectordb
+from src.vectordb.vector_manager import get_documentos_disponiveis,salva_no_vectordb,deleta_do_banco
 
 DOCUMENTS = ["manual_produtos", "relatorio_mensal", "vendas_maio2026"]
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -13,13 +12,20 @@ def side_bar():
  with st.sidebar:
     st.markdown("### **Documentos indexados:**")
     with st.container(height=350):
-        
-         documentos = get_documentos_disponiveis()
-         for doc in documentos:
-          st.markdown(f' - {doc}')
-    # funçoes dentro das side_bar onde aparece os 
-    # funçoes docs add 
-    # função de delete
+        documentos = get_documentos_disponiveis()
+        for doc in documentos:
+            col1, col2 = st.columns([4, 1])
+            with col1:
+                if not documentos:
+                    st.markdown('Lista vazia')
+                else:
+                    st.markdown(f' - {doc}')
+            with col2:
+                if st.button("X", key=f"delete_{doc}"):
+                    deleta_do_banco(doc)
+                    st.cache_resource.clear()
+                    st.rerun()
+
     st.markdown("**Adicionar novo documento:**")
     arquivo_enviado = st.file_uploader(
         "Envie um PDF, TXT ou XLSX",
