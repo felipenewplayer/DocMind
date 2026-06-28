@@ -14,7 +14,7 @@ from src.prompt.prompt_template import rag_prompt
 from src.retrieval.retriever import get_retriever
 from src.app.header import get_header
 from src.app.side_bar import side_bar
-from src.retrieval.retriever import get_documentos_disponiveis
+from src.vectordb.vector_manager import get_documentos_disponiveis
 
 from styles import get_css, render_bot_message, render_user_message
 
@@ -44,7 +44,7 @@ side_bar()
 st.markdown(get_css(), unsafe_allow_html=True)
 
 # ---- Criando o banco de dados no huggingface ───────────────
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def ensure_vectordb():
     if not (DB_PATH / "chroma.sqlite3").exists():
         logger.info("⚙️ vectordb não encontrado, rodando ingest...")
@@ -74,7 +74,7 @@ def typewriter_stream(chain, query, history, delay=0.01):
             time.sleep(delay)
 
 # ─── Pipeline RAG ────────────────────────────────────────
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def load_chain():
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
@@ -82,7 +82,7 @@ def load_chain():
     db = Chroma(persist_directory=str(DB_PATH), embedding_function=embeddings)
     llm = get_llm()
     retriever = get_retriever(db, k=5)
-    get_documentos_disponiveis(db)
+    get_documentos_disponiveis()
     def format_docs(docs):
       return "\n\n".join(doc.page_content for doc in docs)
 
@@ -91,7 +91,7 @@ def load_chain():
             "context": (lambda x: x["question"]) | retriever | format_docs,
             "question": lambda x: x["question"],
             "chat_history": lambda x: x["chat_history"],
-            "documentos_disponiveis": lambda x: ", ".join(get_documentos_disponiveis(db)),
+            "documentos_disponiveis": lambda x: ", ".join(get_documentos_disponiveis()),
         }
         | rag_prompt
         | llm

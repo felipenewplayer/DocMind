@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from src.load_docs.load_docs import load_all_docs
 from src.chunking.chunking import split_into_chunks, filter_empty_chunks
 from src.embeddings.embeddings import load_embeddings
-from src.vectordb.vector_manager import save_to_vectordb
+from src.vectordb.vector_manager import create_banco
 from logs.logs_config import get_logger
 
 # ---- Log -----
@@ -20,7 +20,6 @@ DB_PATH   = Path(os.getenv("DB_PATH",   BASE_DIR / "data" / "vectordb"))
 DOCS_PATH.mkdir(parents=True, exist_ok=True)
 DB_PATH.mkdir(parents=True, exist_ok=True)
 
-
 def main():
     docs = load_all_docs(DOCS_PATH)
     chunks = split_into_chunks(docs)
@@ -28,8 +27,7 @@ def main():
     if not chunks:
         return
     embeddings = load_embeddings()
-    save_to_vectordb(chunks, embeddings, DB_PATH)
-
+    create_banco(chunks, embeddings, DB_PATH)
 
 if __name__ == "__main__":
     main()
