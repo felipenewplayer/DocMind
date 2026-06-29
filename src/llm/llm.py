@@ -3,28 +3,21 @@ from dotenv import load_dotenv
 from logs.logs_config import get_logger
 import os
 
-# ---- Log --------
-logger = get_logger("llm")
 
 load_dotenv()
 
-modelo_principal = ChatGroq(
+def get_llm():
+    
+    modelo_principal = ChatGroq(
     model="llama-3.3-70b-versatile",
     temperature=0.5,
     api_key=os.getenv("GROQ_API_KEY")
-)
-
-modelo_fallback = ChatGroq(
-    model="openai/gpt-oss-120b",
-    temperature=0.5,
-    api_key=os.getenv("GROQ_API_KEY")
-)
-
-def get_llm():
-    logger.info("Carregando LLM...")
-    llm = modelo_principal.with_fallbacks(
-        [modelo_fallback
-         ],
+    )   
+    
+    modelo_fallback = ChatGroq(
+        model="openai/gpt-oss-120b",
+        temperature=0.5,
+        api_key=os.getenv("GROQ_API_KEY")
     )
-    logger.info("LLM carregada")
-    return llm
+    
+    return modelo_principal.with_fallbacks([modelo_fallback])
