@@ -13,7 +13,7 @@ def test_chat_groq(mock_chatgroq):
     # 3. Configura o que .with_fallbacks() retorna quando chamado no principal
     mock_llm = MagicMock()
     mock_llm.invoke.return_value.content = "resposta de teste"
-    mock_principal.with_fallbacks.return_value = mock_llm  # 👈 o que vai aqui?
+    mock_principal.with_fallbacks.return_value = mock_llm 
     
     # 4. Chama get_llm() e testa
     llm = get_llm()
